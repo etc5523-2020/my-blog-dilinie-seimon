@@ -97,13 +97,13 @@ all_austria_data <- austria_daily_covid_data %>%
          )
 ```
 
-The World Health Organization (WHO) declared the COVID-19 outbreak as a pandemic on March 11, 2020. COVID-19 first reported in December 2019 in Wuhan China, is a respiratory disease caused by a new form of the coronavirus. With no confirmed treatment, and the rate of spread across the world, COVID-19 has impacted almost all countries across the world, with Austria being no exception.
+The World Health Organization (WHO) declared the COVID-19 outbreak as a pandemic on March 11, 2020  (“WHO Director-General’s Opening Remarks at the Media Briefing on Covid-19 - 11 March 2020,” n.d.). COVID-19 first reported in December 2019 in Wuhan China, is a respiratory disease caused by a new form of the coronavirus. With no confirmed treatment, and the rate of spread across the world, COVID-19 has impacted almost all countries across the world, with Austria being no exception.
 
 Austria saw growing daily coronavirus (COVID-19) case numbers, especially since March 2020. Although Austria is no longer among the countries that are most affected by the virus or those that reported a large number of deaths, it would be interesting to analyse the spread of COVID-19 in Austria over time.
 
 ### Data Description
 
-The database of daily COVID-19 cases, deaths and recoveries in the countries belonging to the European Union Civil Protection Mechanism (UCPM) maintained by the  European Commission Joint Research Centre (JRC) is used within the analysis of the COVID-19 pandemic in Austria. The population of the Austrian states as at January 2020 is extracted from wikipedia.
+The database of daily COVID-19 cases, deaths and recoveries in the countries belonging to the European Union Civil Protection Mechanism (UCPM) maintained by the  European Commission Joint Research Centre (JRC) is used within the analysis of the COVID-19 pandemic in Austria (The  European Commission Joint Research Centre (JRC) n.d.). The population of the Austrian states as at January 2020 is extracted from Wikipedia.
 
 The table below lists the daily number of COVID-19 cases, deaths and recoveries reported in Austria from `r min(all_austria_data$Date)` to `r max(all_austria_data$Date)`.
 
@@ -111,7 +111,7 @@ The table below lists the daily number of COVID-19 cases, deaths and recoveries 
 allaustria_data_exploration_table <- all_austria_data %>%
   datatable(filter = 'top',
             options = list(pageLength = 10,
-                           dom = 'tip'),
+                           dom = 'Btsp'),
             colnames = c("Positive Cases" = 2, "Deceased" = 3, "Recovered" = 4),
             rownames = FALSE,
             caption = "Daily counts of COVID-19 cases, deaths and recoveries in Austria as at 02-09-2020"
@@ -121,16 +121,16 @@ frameWidget(allaustria_data_exploration_table)
 ```
 
 
-
+  
 The following table is a breakdown of the daily number of COVID-19 cases, deaths and recoveries reported in each of the 9 states of Austria.
 
 
-```{r}
+```{r daily-cases-state-data-exploration}
 states_data_exploration_table <- austria_daily_covid_data %>%
   mutate(Region = as.factor(Region)) %>%
   datatable(filter = 'top',
             options = list(pageLength = 10,
-                           dom = 'tip'),
+                           dom = 'Btsp'),
             colnames = c("Positive Cases" = 3, "Deceased" = 4, "Recovered" = 5),
             rownames = FALSE,
             caption = "Breakdown of daily counts of COVID-19 cases, deaths and recoveries in Austria by state"
@@ -155,10 +155,10 @@ austria_all_data %>%
              y = Cases,
              color = Type)) +
   geom_line() +
-  theme_classic()
+  theme_bw()
 ```
 
-The trend in COVID-19 since early 2020 upto around March is quite a sudden increase, thereafter the rate of increase suddenly plateaus in around May. The rate of increate is much lower from May to July and thereafter increases again. This may be an effect of the social distancing restrictions being eased in Austria.
+The trend in COVID-19 since early 2020 up to around March is quite a sudden increase, thereafter the rate of increase suddenly plateaus in around May. The rate of increase is much lower from May to July and thereafter increases again. This may be an effect of the social distancing restrictions being eased in Austria.
 The number of recoveries isn't recorded in the initial few months of 2020 and suddenly reports a large number in mid April. This might be due to a collective number of recoveries from the novel coronavirus being confirmed. Thereafter, it's interesting how the number of recoveries follow a similar trend to that of the confirmed cases, but lower in number. The number of deaths, starting in around end April increases at a very low but steady rate.
 
 The cumulative number of positive cases of COVID-19, number of deaths and number of recoveries in the 9 states of Austria as at `r max(all_austria_data$Date)` and the percentage of deaths and recoveries on the number of reported cases in each state are represented in table \@ref(tab:case-numbers-austria-states).
@@ -181,9 +181,27 @@ austria_covid_data %>%
 ```
 
 
-The highest number of COVID-19 patients, deaths and recoveries has been reported in Wien while Burgernlad reports the lowest number of cases, deaths and recoveries. Although Wien reports the highest number of deaths in Austria, Steiermark reports a massive 5.72% of deaths of the COVID-19 cases in the state and also has a comparatively low percentage of recoveries at 84.23%. Vorarlberg reports a lower number of cases and deaths as well as a lower proportion of deaths to cases, and also has a high percentage of rercoveries at 92.59%. Further, Wien reports the lowest percentage of recoveries while Oberösterreich reports the lowest percentage of deaths.
+The highest number of COVID-19 patients, deaths and recoveries has been reported in Wien while Burgernlad reports the lowest number of cases, deaths and recoveries. Although Wien reports the highest number of deaths in Austria, Steiermark reports a massive 5.72% of deaths of the COVID-19 cases in the state and also has a comparatively low percentage of recoveries at 84.23%. Vorarlberg reports a lower number of cases and deaths as well as a lower proportion of deaths to cases, and also has a high percentage of recoveries at 92.59%. Further, Wien reports the lowest percentage of recoveries while Oberösterreich reports the lowest percentage of deaths.
 
-Although the numbers provide an interesting insight on the status of COVID-19 across the 9 states of Austria, it would be more appropriate to compare the proportion of cases to the population of each state. The COVID-19 positive cases as a percentage of the total population of each state is represented in table \@ref(tab:percent-of-positive-cases-in-states)
+Figure \@ref(fig:COVID-trend-states-austria) show the trends in the cumulative number of COVID-19 cases across the 9 states in Austria. The trends in all states except for Oberösterreich and Wien behave quite similarly, although at different absolute numbers; starting off in early March, rapidly increases till mid April and thereafter almost plateaus with a very small rate of increase till mid July and starts to increase again gradually. The trend of COVID-19 cases in Oberösterreich follows a similar pattern till early July, after which the counts increase rapidly. The trend of cases in Wien behave completely different to the rest of the states; starting at almost the same time as the others increases at almost a steady rate till end July and starts to increase rapidly thereafter.
+
+
+```{r COVID-trend-states-austria, fig.cap="The trend of cumulative COIVD cases in the Austria, states"}
+ggplotly(
+austria_all_data %>%
+  mutate(CumulativeDeceased = replace_na(CumulativeDeceased, 0),
+         CumulativeRecovered = replace_na(CumulativeRecovered, 0)) %>%
+  ggplot(aes(x = Date,
+             y = CumulativePositive,
+             color = Region)) +
+  geom_line() +
+  ylab("Cumulative Number of Cases") +
+  theme_bw())  %>%
+  config(displayModeBar = F)
+```
+
+
+Although the numbers provide an interesting insight on the spread of COVID-19 across the 9 states of Austria, it would be more appropriate to compare the proportion of cases to the population of each state. The COVID-19 positive cases as a percentage of the total population of each state is represented in table \@ref(tab:percent-of-positive-cases-in-states)
 
 ```{r percent-of-positive-cases-in-states}
 austria_all_data %>%
@@ -199,17 +217,8 @@ austria_all_data %>%
 
 Although the percentage of COVID-19 cases in each state is very small(<1%) of its population, it is highest in Tirol at 0.59% and is followed by Wien at 0.43%.
 
+### References
 
+"The  European Commission Joint Research Centre (JRC)" n.d. https://github.com/ec-jrc/COVID-19"
 
-```{r}
-ggplotly(
-austria_all_data %>%
-  mutate(CumulativeDeceased = replace_na(CumulativeDeceased, 0),
-         CumulativeRecovered = replace_na(CumulativeRecovered, 0)) %>%
-  ggplot(aes(x = Date,
-             y = CumulativePositive,
-             color = Region)) +
-  geom_line() +
-  ylab("Cumulative Number of Cases") +
-  theme_bw())
-```
+“WHO Director-General’s Opening Remarks at the Media Briefing on Covid-19 - 11 March 2020.” n.d. https://www.who.int/dg/speeches/detail/who-director-general-s-opening-remarks-at-the-media-briefing-on-covid-19---11-march-2020.
