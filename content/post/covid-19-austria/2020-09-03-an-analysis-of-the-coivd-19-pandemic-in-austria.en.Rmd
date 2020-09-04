@@ -1,0 +1,215 @@
+---
+title: An analysis of the COIVD-19 pandemic in Austria
+author: Dilinie Seimon
+date: '2020-09-03'
+slug: an-analysis-of-the-coivd-19-pandemic-in-austria
+categories: []
+tags: []
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-09-03T19:32:17+10:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+bibilography : references.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(tidyverse)
+library(tidycovid19)
+library(readr)
+library(lubridate)
+library(kableExtra)
+library(DT)
+library(widgetframe)
+library(plotly)
+```
+
+```{r scraping-austria-population-data, eval = FALSE}
+library(rvest)
+
+url <- "https://en.wikipedia.org/wiki/States_of_Austria"
+austria_states_pop <- url %>%
+    read_html() %>%
+    html_node(xpath = '//*[@id="mw-content-text"]/div[1]/table[3]') %>%
+    html_table(header = TRUE, fill = TRUE) %>%
+  data.frame() %>%
+  rename("Population" = Population..January.2020.,
+         "Area" = Area..km2.) %>%
+  select(State, Population, Area) %>%
+  mutate(Population = as.numeric(gsub("," ,"", Population)),
+         Area = as.numeric(gsub("," ,"", Area)))
+write_csv(austria_states_pop, here::here("content/post/covid-19-austria/data/austria_2020jan_population.csv"))
+```
+
+```{r}
+
+austria_states_pop <- read_csv(here::here("content/post/covid-19-austria/data/austria_2020jan_population.csv"))
+
+jrc_covid_19_regions_hxl <- read_csv(here::here("content/post/covid-19-austria/data/jrc-covid-19-regions-hxl.csv"))
+
+```
+
+```{r data-wrangling and tidying}
+austria_states_pop <- austria_states_pop %>%
+  mutate(State = case_when(
+    State == "Vienna (Wien)" ~ "Wien",
+    State == "Lower Austria (Niederösterreich)" ~ "Niederösterreich",
+    State == "Upper Austria (Oberösterreich)" ~ "Oberösterreich",
+    State == "Styria (Steiermark)" ~ "Steiermark",
+    State == "Tyrol (Tirol)" ~ "Tirol",
+    State == "Carinthia (Kärnten)" ~ "Kärnten",
+    TRUE ~ State
+  ))
+
+austria_covid_data <- jrc_covid_19_regions_hxl %>% 
+  filter(CountryName == "Austria",
+         Region != "NOT SPECIFIED" ) %>%
+  mutate(Date = ymd(Date),
+         CumulativePositive = as.numeric(CumulativePositive),
+         CumulativeDeceased = as.numeric(CumulativeDeceased),
+         CumulativeRecovered = as.numeric(CumulativeRecovered))
+
+austria_all_data <- left_join(austria_covid_data, austria_states_pop, by=c("Region"="State"))
+
+austria_daily_covid_data <- austria_covid_data%>%
+  group_by(Region) %>%
+  mutate(daily_positive_cases = c(CumulativePositive[1],diff(CumulativePositive)),
+         daily_deceased = c(CumulativeDeceased[1],diff(CumulativeDeceased)),
+         daily_recovered = c(CumulativeRecovered[1],diff(CumulativeRecovered)),
+         daily_deceased = replace_na(daily_deceased, 0),
+         daily_recovered = replace_na(daily_recovered, 0)
+         ) %>%
+  select(Date, Region, daily_positive_cases, daily_deceased, daily_recovered)
+
+all_austria_data <- austria_daily_covid_data %>%
+  group_by(Date) %>%
+  summarise(daily_positive_cases = sum(daily_positive_cases),
+         daily_deceased = sum(daily_deceased),
+         daily_recovered = sum(daily_recovered)) %>%
+  mutate(daily_deceased = replace_na(daily_deceased, 0),
+         daily_recovered = replace_na(daily_recovered, 0)
+         )
+```
+
+The World Health Organization (WHO) declared the COVID-19 outbreak as a pandemic on March 11, 2020. COVID-19 first reported in December 2019 in Wuhan China, is a respiratory disease caused by a new form of the coronavirus. With no confirmed treatment, and the rate of spread across the world, COVID-19 has impacted almost all countries across the world, with Austria being no exception.
+
+Austria saw growing daily coronavirus (COVID-19) case numbers, especially since March 2020. Although Austria is no longer among the countries that are most affected by the virus or those that reported a large number of deaths, it would be interesting to analyse the spread of COVID-19 in Austria over time.
+
+### Data Description
+
+The database of daily COVID-19 cases, deaths and recoveries in the countries belonging to the European Union Civil Protection Mechanism (UCPM) maintained by the  European Commission Joint Research Centre (JRC) is used within the analysis of the COVID-19 pandemic in Austria. The population of the Austrian states as at January 2020 is extracted from wikipedia.
+
+The table below lists the daily number of COVID-19 cases, deaths and recoveries reported in Austria from `r min(all_austria_data$Date)` to `r max(all_austria_data$Date)`.
+
+```{r daily-cases-data-exploration}
+allaustria_data_exploration_table <- all_austria_data %>%
+  datatable(filter = 'top',
+            options = list(pageLength = 10,
+                           dom = 'tip'),
+            colnames = c("Positive Cases" = 2, "Deceased" = 3, "Recovered" = 4),
+            rownames = FALSE,
+            caption = "Daily counts of COVID-19 cases, deaths and recoveries in Austria as at 02-09-2020"
+            )
+
+frameWidget(allaustria_data_exploration_table)
+```
+
+
+
+The following table is a breakdown of the daily number of COVID-19 cases, deaths and recoveries reported in each of the 9 states of Austria.
+
+
+```{r}
+states_data_exploration_table <- austria_daily_covid_data %>%
+  mutate(Region = as.factor(Region)) %>%
+  datatable(filter = 'top',
+            options = list(pageLength = 10,
+                           dom = 'tip'),
+            colnames = c("Positive Cases" = 3, "Deceased" = 4, "Recovered" = 5),
+            rownames = FALSE,
+            caption = "Breakdown of daily counts of COVID-19 cases, deaths and recoveries in Austria by state"
+            )
+
+frameWidget(states_data_exploration_table)
+```
+
+
+### An overview of COVID-19 in Austria
+
+In gaining an insight into the spread of COVID-19 in Austria, figure \@ref(fig:COVID-trend-austria) plots the trend of the cumulative counts of total confirmed COVID-19 cases, deaths and recoveries in Austria.
+
+```{r COVID-trend-austria, fig.cap="The trend of cumulative COIVD cases, deaths and recoveries in Austria"}
+austria_all_data %>%
+  group_by(Date) %>%
+  summarise('Confirmed Cases' = sum(CumulativePositive),
+            Deaths = sum(CumulativeDeceased),
+            Recoveries = sum(CumulativeRecovered)) %>%
+  pivot_longer(cols = -Date, names_to = "Type", values_to = "Cases") %>%
+  ggplot(aes(x = Date,
+             y = Cases,
+             color = Type)) +
+  geom_line() +
+  theme_classic()
+```
+
+The trend in COVID-19 since early 2020 upto around March is quite a sudden increase, thereafter the rate of increase suddenly plateaus in around May. The rate of increate is much lower from May to July and thereafter increases again. This may be an effect of the social distancing restrictions being eased in Austria.
+The number of recoveries isn't recorded in the initial few months of 2020 and suddenly reports a large number in mid April. This might be due to a collective number of recoveries from the novel coronavirus being confirmed. Thereafter, it's interesting how the number of recoveries follow a similar trend to that of the confirmed cases, but lower in number. The number of deaths, starting in around end April increases at a very low but steady rate.
+
+The cumulative number of positive cases of COVID-19, number of deaths and number of recoveries in the 9 states of Austria as at `r max(all_austria_data$Date)` and the percentage of deaths and recoveries on the number of reported cases in each state are represented in table \@ref(tab:case-numbers-austria-states).
+
+```{r case-numbers-austria-states}
+austria_covid_data %>%
+  filter(Date == max(Date)) %>%
+  mutate(PercentDeaths = round((CumulativeDeceased / CumulativePositive)*100, digits = 2),
+         PercentRecoveries = round((CumulativeRecovered / CumulativePositive)*100, digits = 2)) %>%
+  select(Region, CumulativePositive, CumulativeDeceased, PercentDeaths, CumulativeRecovered, PercentRecoveries) %>%
+  arrange(desc(CumulativePositive)) %>%
+  rename("Number of Positive Cases" = CumulativePositive,
+         "Number of Deaths" = CumulativeDeceased,
+         "Number of Recoveries" = CumulativeRecovered,
+         "Percentage of Deaths (%)" = PercentDeaths,
+         "Percentage of Recoveries (%)" = PercentRecoveries) %>%
+  kable(caption = "A summary of COVID-19 cases across the 9 states of Austria as at 02-09-2020") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))%>%
+  add_header_above(c(" " = 2, "Deaths" = 2, "Recoveries" = 2))
+```
+
+
+The highest number of COVID-19 patients, deaths and recoveries has been reported in Wien while Burgernlad reports the lowest number of cases, deaths and recoveries. Although Wien reports the highest number of deaths in Austria, Steiermark reports a massive 5.72% of deaths of the COVID-19 cases in the state and also has a comparatively low percentage of recoveries at 84.23%. Vorarlberg reports a lower number of cases and deaths as well as a lower proportion of deaths to cases, and also has a high percentage of rercoveries at 92.59%. Further, Wien reports the lowest percentage of recoveries while Oberösterreich reports the lowest percentage of deaths.
+
+Although the numbers provide an interesting insight on the status of COVID-19 across the 9 states of Austria, it would be more appropriate to compare the proportion of cases to the population of each state. The COVID-19 positive cases as a percentage of the total population of each state is represented in table \@ref(tab:percent-of-positive-cases-in-states)
+
+```{r percent-of-positive-cases-in-states}
+austria_all_data %>%
+  filter(Date == max(Date)) %>%
+  mutate(PercentPositive = round((CumulativePositive / Population)*100, digits = 2)) %>%
+  select(Region, PercentPositive, CumulativePositive, Population) %>%
+  arrange(desc(Population)) %>%
+  rename("Percentage of Positive cases (%)" = PercentPositive,
+         "Number of Positive cases" = CumulativePositive) %>%
+  kable(caption = "The percentage of COVID-19 cases of the total population in Austrian states") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+```
+
+Although the percentage of COVID-19 cases in each state is very small(<1%) of its population, it is highest in Tirol at 0.59% and is followed by Wien at 0.43%.
+
+
+
+```{r}
+ggplotly(
+austria_all_data %>%
+  mutate(CumulativeDeceased = replace_na(CumulativeDeceased, 0),
+         CumulativeRecovered = replace_na(CumulativeRecovered, 0)) %>%
+  ggplot(aes(x = Date,
+             y = CumulativePositive,
+             color = Region)) +
+  geom_line() +
+  ylab("Cumulative Number of Cases") +
+  theme_bw())
+```
