@@ -36,7 +36,7 @@ The first three known cases of COVID-19 were reported in Bangladesh on the 8^th^
 
 Figure \@ref(fig:trend-plot) visualizes the trend of cumulative confirmed COVID-19 cases, deaths and recoveries in Bangladesh. 
 
-```{r trend-plot, fig.cap = "The trend of cumulative COVID-19 cases, deaths and recoveries in Bangladesh"}
+```{r trend-plot, fig.cap = "The trend of COVID-19 cases, deaths and recoveries in Bangladesh"}
 options(scipen = 999)
 tidycovid19_bangla %>%
   select(date, confirmed, deaths, recovered) %>%
@@ -50,7 +50,8 @@ tidycovid19_bangla %>%
   theme_light() +
   labs(x = "Date",
        y = "Cumulative number of cases")+ 
-  scale_x_date(date_breaks = "months" , date_labels = "%b-%y")
+  scale_x_date(date_breaks = "months" , date_labels = "%b-%y") +
+  ggtitle("The trend of COVID-19 cases, deaths and recoveries in Bangladesh")
 ```
 
 It's evident that the spread has been comparatively low till around mid June and has escalated at a very high rate afterwards.
@@ -62,14 +63,14 @@ The rate of recoveries although starts out very, low shows a sharp rise in mid J
 The number of deaths however is consistently on the rise although at a much lower rate in comparison to the confirmed cases.
 
 
-## Corruption in handling COVID-19 in Bangladesh
+## Corrupt handling of COVID-19 in Bangladesh
 
 
 Bangladesh being the second most affected country in South Asia after India, and also having a high population density has been constantly criticised for one of the worlds lowest per capita testing rates rates (Dhaka Tribune. 2020, April 1) and corrupt practices in dealing with the pandemic.
 
-Figure \@ref(fig:trend-plot) visulaizes the trend of COVID-19 tests carried out in Bangladesh up until the 15^th^ of September 2020, based on the data provided by the John Hopkins University.
+Figure \@ref(fig:testing-trend) visulaizes the trend of COVID-19 tests carried out in Bangladesh up until the 15^th^ of September 2020, based on the data provided by the John Hopkins University.
 
-```{r testing-trend}
+```{r testing-trend, fig.cap="The trend of COVID-19 tests carried out in Bangladesh"}
 bangla_pop <- (tidycovid19_bangla %>%
   filter(date == "2020-09-15"))$population
 
@@ -81,12 +82,13 @@ tidycovid19_bangla %>%
   theme_light() +
   labs(x = "Date",
        y = "Cumulative number of tests")+ 
-  scale_x_date(date_breaks = "months" , date_labels = "%b-%y")
+  scale_x_date(date_breaks = "months" , date_labels = "%b-%y") +
+  ggtitle("The trend of COVID-19 tests carried out in Bangladesh")
 ```
 
 Although Bangladesh has carried out a considerable number of tests over time, the rate of increase of testing remains almost constant with only 0.01% of the entire population of Bangladesh tested by the 15^th^ of September 2020. Health Experts have claimed the low rate of testing is due to the government imposed fee on tests at government-run facilities and the requirement of a doctor's note to get tested.
 
-Several have been denied medical treatment and turned away from hospitals due to the medical staff's fear of transmission, while some of these cases resulted in death. In July 2020, several arrests were made in a hospital in Dhaka for fake COVID-19 negative certificates without conducting tests. Corrupt practices such as these has contributed immensely to the wide spread of COVID-19 in Bangladesh amidst the many social distancing restrictions and lockdowns imposed.
+Several have been denied medical treatment and turned away from hospitals due to the medical staff's fear of transmission, while some of these cases resulted in death. In July 2020, several arrests were made in a hospital in Dhaka for fake COVID-19 negative certificates without conducting tests. Corrupt practices such as these has contributed immensely to the spread of COVID-19 in Bangladesh amidst the many social distancing restrictions and lockdowns imposed.
 
 The Institute of Epidemology, Disease Control and Research (IEDCR), the national Institute for conducting disease surveillance and outbreak investigation in Bangladesh was accused of publishing lower than actual COVID-19 cases in Dhaka on the 16th of June, and since then temporarily stopped publishing area-wise COVID-19 infection data (Dhaka Tribune. 2020, June 20). The resignation of the chief of the Directorate General of Health Services (DGHS), which is spearheading Bangladesh's fight against COVID-19 has also given rise to many controversies related to the corrupt paractices followed.
 
