@@ -21,15 +21,22 @@ authors: []
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 library(readr)
 library(tidyverse)
+library(kableExtra)
 ```
 
 ```{r reading-in-data}
 tidycovid19_bangla <- read_csv(here::here("content/post/covid-19-bangladesh/data/tidycovid19-bangladesh-data.csv"))
 ```
 
-## The spread of COVID-19
+The World Health Organization (WHO) declared the COVID-19 outbreak as a pandemic on March 11, 2020  (“WHO Director-General’s Opening Remarks at the Media Briefing on Covid-19 - 11 March 2020,” n.d.). COVID-19 first reported in December 2019 in Wuhan China, is a respiratory disease caused by a new form of the coronavirus. With no confirmed treatment, and the rate of spread across the world, COVID-19 has impacted almost all countries across the world, with Bangladesh being no exception.
 
-```{r trend-plot}
+## The spread of COVID-19 in Bangladesh
+
+The first three known cases of COVID-19 were reported in Bangladesh on the 8^th^ of March 2020 by the country's epidemiology institute (Reuters, 2020), and the virus is confirmed to have started spreading in Bangladesh in March 2020 (COVID-19 pandemic in Bangladesh, 2020).
+
+Figure \@ref(fig:trend-plot) visualizes the trend of cumulative confirmed COVID-19 cases, deaths and recoveries in Bangladesh. 
+
+```{r trend-plot, fig.cap = "The trend of cumulative COVID-19 cases, deaths and recoveries in Bangladesh"}
 options(scipen = 999)
 tidycovid19_bangla %>%
   select(date, confirmed, deaths, recovered) %>%
@@ -41,8 +48,59 @@ tidycovid19_bangla %>%
              color = Type)) +
   geom_line(size=1.3) +
   theme_light() +
-  labs(x = "Date")+ 
+  labs(x = "Date",
+       y = "Cumulative number of cases")+ 
   scale_x_date(date_breaks = "months" , date_labels = "%b-%y")
 ```
 
-## Measures in response to COVID-19
+It's evident that the spread has been comparatively low till around mid June and has escalated at a very high rate afterwards.
+
+It's also interesting the slightly lower rate of increase visible in mid June which can be assumed to correspond to the end of the first wave of COVID-19 in Bangladesh. The rate of increase since then has been very high and consistently increasing up until today (15-Spet-2020).
+
+The rate of recoveries although starts out very, low shows a sharp rise in mid June, which may be accounted to a bulk recording of recoveries as at date. Since then, the rate of recoveries has increased significantly and accounts for a large proportion of the confirmed cases.
+
+The number of deaths however is consistently on the rise although at a much lower rate in comparison to the confirmed cases.
+
+
+## Corruption in handling COVID-19 in Bangladesh
+
+
+Bangladesh being the second most affected country in South Asia after India, and also having a high population density has been constantly criticised for one of the worlds lowest per capita testing rates rates (Dhaka Tribune. 2020, April 1) and corrupt practices in dealing with the pandemic.
+
+Figure \@ref(fig:trend-plot) visulaizes the trend of COVID-19 tests carried out in Bangladesh up until the 15^th^ of September 2020, based on the data provided by the John Hopkins University.
+
+```{r testing-trend}
+bangla_pop <- (tidycovid19_bangla %>%
+  filter(date == "2020-09-15"))$population
+
+tidycovid19_bangla %>%
+  ggplot(aes(x = date,
+             y = total_tests)) +
+  geom_line(size=1.3, color= "blue") +
+  annotate("text", label = paste0(round(((tidycovid19_bangla %>% filter(date == "2020-09-15"))$total_tests)/bangla_pop, 2)," %"), x = as.Date("2020-09-15"), y = (tidycovid19_bangla %>% filter(date == "2020-09-15"))$total_tests + 100000, colour = "red") +
+  theme_light() +
+  labs(x = "Date",
+       y = "Cumulative number of tests")+ 
+  scale_x_date(date_breaks = "months" , date_labels = "%b-%y")
+```
+
+Although Bangladesh has carried out a considerable number of tests over time, the rate of increase of testing remains almost constant with only 0.01% of the entire population of Bangladesh tested by the 15^th^ of September 2020. Health Experts have claimed the low rate of testing is due to the government imposed fee on tests at government-run facilities and the requirement of a doctor's note to get tested.
+
+Several have been denied medical treatment and turned away from hospitals due to the medical staff's fear of transmission, while some of these cases resulted in death. In July 2020, several arrests were made in a hospital in Dhaka for fake COVID-19 negative certificates without conducting tests. Corrupt practices such as these has contributed immensely to the wide spread of COVID-19 in Bangladesh amidst the many social distancing restrictions and lockdowns imposed.
+
+The Institute of Epidemology, Disease Control and Research (IEDCR), the national Institute for conducting disease surveillance and outbreak investigation in Bangladesh was accused of publishing lower than actual COVID-19 cases in Dhaka on the 16th of June, and since then temporarily stopped publishing area-wise COVID-19 infection data (Dhaka Tribune. 2020, June 20). The resignation of the chief of the Directorate General of Health Services (DGHS), which is spearheading Bangladesh's fight against COVID-19 has also given rise to many controversies related to the corrupt paractices followed.
+
+
+### References
+
+Reuters (2020), "Bangladesh confirms its first three cases of coronavirus".  Available at: https://www.reuters.com/article/us-health-coronavirus-bangladesh-idUSKBN20V0FS
+
+"COVID-19 pandemic in Bangladesh". (2020, September 16) In Wikipedia, The Free Encyclopedia. Retrieved 02:03, September 17, 2020, Available at: https://en.wikipedia.org/w/index.php?title=COVID-19_pandemic_in_Bangladesh&oldid=978765927
+
+Dhaka Tribune. (2020, April 1), "Bangladesh coronavirus test rate lowest in the world". Available at: https://www.dhakatribune.com/bangladesh/2020/04/01/only-one-in-100-000-tested-for-coronavirus-in-bangladesh
+
+Dhaka Tribune. (2020, June 20), "IEDCR temporarily stops publishing Dhaka city COVID-19 infection data". Available at: https://www.dhakatribune.com/health/coronavirus/2020/06/20/iedcr-temporarily-stops-publishing-dhaka-city-covid-infection-data
+
+"The  European Commission Joint Research Centre (JRC)" n.d. Available at: https://github.com/ec-jrc/COVID-19"
+
+“WHO Director-General’s Opening Remarks at the Media Briefing on Covid-19 - 11 March 2020.” n.d. Available at: https://www.who.int/dg/speeches/detail/who-director-general-s-opening-remarks-at-the-media-briefing-on-covid-19---11-march-2020.
