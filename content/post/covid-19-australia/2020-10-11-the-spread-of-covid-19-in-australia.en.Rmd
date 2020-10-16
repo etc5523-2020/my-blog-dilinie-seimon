@@ -1,0 +1,67 @@
+---
+title: A Dashboard on the Spread of COVID-19 in Australia
+author: Dilinie Seimon
+date: '2020-10-11'
+slug: the-spread-of-covid-19-in-australia
+categories: []
+tags: []
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-10-11T22:08:35+11:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+The World Health Organization (WHO) declared the COVID-19 outbreak as a pandemic on March 11, 2020  (WHO 2020). COVID-19 first reported in December 2019 in Wuhan China, is a respiratory disease caused by a new form of the coronavirus. With no confirmed treatment, and the rate of spread across the world, COVID-19 has impacted almost all countries across the world, with Australia being no exception.
+
+COVID-19 was first confirmed in Australia in late January 2020 (Australian Government Department of Health 2020), and has spread across the entire country since then. While the first COVID-19 outbreak was under control by the end of April with many restrictions on social distancing and border closures, Australia was hit by a new wave in June even bigger and deadlier than the first.
+
+Since the COVID-19 case numbers have become the most sought after news item on the Australian daily news, I developed a [dashboard](https://dilinie-seimon.shinyapps.io/covid19-australia-dashboard-dilinie-seimon/?_ga=2.110198533.1095934698.1602417465-1050941066.1591948476) that visualizes the spread of COVID-19 in Australia
+
+My dashboard aims at visualizing :  
+
+* The total spread of COVID-19 in Australia at date  
+* The temporal trends of the spread of COVID-19 in each state  
+* The daily counts of confirmed cases, deaths and recoveries
+
+
+### Self Review
+
+#### What has been done well?
+
+The dashboard aimed to be used by the general public was designed to be simple, direct and easy to navigate; and presents the data from different perspectives such as the latest counts, cumulative case trends and daily case count trends. Further, the plots used are simple, easy to understand upon direct view and don't require complex interpretation.
+
+The overview of current case numbers, trend of spread and daily counts have been separated into three different tabs to avoid an overload of information, and user friendly navigation instructions have been provided throughout.
+
+#### What can be improved?
+
+Upon completion of the dashboard, I realized that I had missed out on adding a plot representing the temporal trend of the overall case counts in Australia, although a breakdown of the trends of each state is available. This should definitely be added in order to improve the dashboard.
+
+I also feel that the dashboard can also be further improved with regard to interactivity; by adding more detailed elements such as tool-tips on hover, highlighting respective table rows upon selecting states on the map etc. to improve the user experience.
+
+#### What can be added?
+
+In addition to the case numbers and trends of spread of COIVD-19, a timeline of significant events related to COVID-19 such as enforcing/lifting restrictions, lockdowns, curfews could be included inline with the line plots representing the temporal trends of each state; which maybe helpful in interpreting the trends frther.
+
+#### What it could've been, if technology allowed
+
+It wouldve made more sense to add a faceted plot of the temporal trends of COVID-19 cases by state and synced the interactions over all facets such as;
+
+* A synced vertical line on hover across all facets allowing to view the case counts in each state at a given date
+* Synchronized zooming in on timelines over all facets, allowing a consitent timeline of cases over all states
+
+### Conclusion
+
+In conclusion, although there is no such thing as a perfect dashboard and there are limitless combinations of plots and tables that can be used in developing a dashboard, it's most important to look at the design of the dashboard from the perspective of the expected users and maximize the user experience for them. It would also be beneficial to iteratively receive feedback from the expected end users while developing the dashboard since it's really easy for a developer to go overobard on including all advanced features available to them.
+
+
+### References
+
+Australian Government Department of Health (2020). Coronavirus (COVID-19) current situation and case numbers [https://www.health.gov.au/news/health-alerts/novel-coronavirus-2019-ncov-health-alert/coronavirus-covid-19-current-situation-and-case-numbers](https://www.health.gov.au/news/health-alerts/novel-coronavirus-2019-ncov-health-alert/coronavirus-covid-19-current-situation-and-case-numbers)
+
+WHO (2020). WHO Director-General’s Opening Remarks at the Media Briefing on Covid-19 - 11 March 2020. n.d. [https://www.who.int/dg/speeches/detail/who-director-general-s-opening-remarks-at-the-media-briefing-on-covid-19---11-march-2020](https://www.who.int/dg/speeches/detail/who-director-general-s-opening-remarks-at-the-media-briefing-on-covid-19---11-march-2020)
