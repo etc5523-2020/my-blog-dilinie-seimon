@@ -1,0 +1,96 @@
+---
+title: A review of the covtrack R-Package
+author: Dilinie Seimon
+date: '2020-10-27'
+slug: a-review-of-the-covtrack-r-package
+categories: []
+tags: []
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-10-27T13:24:15+11:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(emo)
+```
+
+## The `covtrack` R-package `r emo::ji("package")``r emo::ji("eyes")`
+
+**covtrack** is an R-package developed by [Ketan Kabu](https://github.com/kabugit) to provide an overview of the COVID-19 cases and deaths in USA, Brazil, India and Australia through a Shiny application embedded within the package.
+
+While the application is primarily aimed at viewing the status of COVID-19 cases in the countries mentioned above, he also hopes that it will also be used to influence decision making in the future.
+
+## Trying it out `r emo::ji("woman_technologist")`
+
+Installing the package was a breeze, with all the required dependencies also being installed along with the package `r emo::ji("star")` The README file on the [package Git Repository](https://github.com/etc5523-2020/r-package-assessment-kabugit) gave clear instructions on how to install the package. However, I was a bit confused about what I could do with the package and what functions I could use, since I couldn't find this information on the README file `r emo::ji("confused")` I also couldn't find a publicly accessible website with the documentation and vignettes.
+
+So I decided to directly launch the app exported by the `covtrack` package usng the `launch_app()` function, and received an error stating that a few functions used within the app couldn't be found `r emo::ji("thinking")`
+
+Then as the obvious next step I decided to dive into the code `r emo::ji("nerd")` and try to figure out what went wrong.
+
+## Checking out the code `r emo::ji("nerd")``r emo::ji("computer")`
+
+With the power of open source, I cloned the [Git repository of the package](ttps://github.com/etc5523-2020/r-package-assessment-kabugit) and did some snooping around to try and launch the Shiny app and see what interesting insights it had to offer.
+
+Turns out that I only had to attach the `covtrack` package within itself, to use the functions eported by the package in the embedded app. A simple fix for a simple mistake `r emo::ji("wrench")`.
+
+Although I fixed this error, I still couldnt get the plots within the app to appear. With limited time and resources I decided that this is a fix for a another day.
+
+## What I loved about the app `r emo::ji("red_heart")`
+
+The app provided all the information expected of it, such as a comparison of the trend of COVID-19 cases and deaths due to COVID-19 in the selected countries, as well as a comparison of death rates per confirmed cases.
+
+But what I loved most about the app is :  
+
+**The structure of the app**  
+The app was structured in a very user-friendly format with each menu item having a user guide explaining the visualization and instructions to use.
+
+**The interactive elements in the app**  
+The user was allowed to select the countries to be included in the plots and also select the date ranges to filter the plot. 
+
+## What can be improved `r emo::ji("question")`
+
+The area that I feel needs most improvement is the documenation.
+It was such a shame that all the documentation and vignettes were included within the app but not exposed to the public.  
+Although this is a fantastic app, the lack of documentation stating what functions are available to use and examples of usage lets it down.
+
+Another area that could be improved is by using functions within the Shiny application embedded within the package to minimize repetitive code.
+
+The data reading and wrangling within the application could also be done external to the package and the cleaned data files included within the package to minimize the size of the package and processing and loading time.
+
+More test cases can also be included to test functionality, possible input arguments and edge cases for the exported functions.
+
+## Conclusion `r emo::ji("handshake")`
+
+The `covtrack` R-package is definitely and interesting package aimed at comparing COVID-19 cases across USA, Brazil, India and Australia, which can then be used to compare the similarities and differences in trends based on the different approaches followed by the countries to manage the spread.
+While there are still a few areas for improvement, the package is definitely a great idea in the making `r emo::ji("clap")`
+
+Reviewing the package was also a great learning experience for me in terms of debugging an application, identifying and resolving errors as well as understanding a completely different coding-style to mine.
+
+Hope you enjoyed my review! 
+
+
+
+In summary, the following checklist reviews a few key components of the package.
+
+#### Documentation  
+The package includes all the following forms of documentation:
+
+- [x] **Installation instructions:** for the package is found in README  
+- [x] **Vignette(s)** demonstrating major functionality that runs successfully locally  
+- [x] **Function Documentation:** for all exported functions in R help  
+- [ ] **Examples** for all exported functions in R Help that run successfully locally  
+
+#### Functionality  
+- [x] **Installation:** Installation succeeds as documented.  
+- [ ] **Functionality:** Any functional claims of the software been confirmed.  
+- [x] **Automated tests:** Unit tests cover essential functions of the package
+and a reasonable range of inputs and conditions. All tests pass on the local machine.  

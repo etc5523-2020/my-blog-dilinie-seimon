@@ -1,0 +1,95 @@
+---
+title: A review of the covtrack R-Package
+author: Dilinie Seimon
+date: '2020-10-27'
+slug: a-review-of-the-covtrack-r-package
+categories: []
+tags: []
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-10-27T13:24:15+11:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+
+<div id="the-covtrack-r-package" class="section level2">
+<h2>The <code>covtrack</code> R-package 📦👀</h2>
+<p><strong>covtrack</strong> is an R-package developed by <a href="https://github.com/kabugit">Ketan Kabu</a> to provide an overview of the COVID-19 cases and deaths in USA, Brazil, India and Australia through a Shiny application embedded within the package.</p>
+<p>While the application is primarily aimed at viewing the status of COVID-19 cases in the countries mentioned above, he also hopes that it will also be used to influence decision making in the future.</p>
+</div>
+<div id="trying-it-out" class="section level2">
+<h2>Trying it out 👩‍💻</h2>
+<p>Installing the package was a breeze, with all the required dependencies also being installed along with the package ⭐ The README file on the <a href="https://github.com/etc5523-2020/r-package-assessment-kabugit">package Git Repository</a> gave clear instructions on how to install the package. However, I was a bit confused about what I could do with the package and what functions I could use, since I couldn’t find this information on the README file 😕 I also couldn’t find a publicly accessible website with the documentation and vignettes.</p>
+<p>So I decided to directly launch the app exported by the <code>covtrack</code> package usng the <code>launch_app()</code> function, and received an error stating that a few functions used within the app couldn’t be found 🤔</p>
+<p>Then as the obvious next step I decided to dive into the code 🤓 and try to figure out what went wrong.</p>
+</div>
+<div id="checking-out-the-code" class="section level2">
+<h2>Checking out the code 🤓💻</h2>
+<p>With the power of open source, I cloned the <a href="ttps://github.com/etc5523-2020/r-package-assessment-kabugit">Git repository of the package</a> and did some snooping around to try and launch the Shiny app and see what interesting insights it had to offer.</p>
+<p>Turns out that I only had to attach the <code>covtrack</code> package within itself, to use the functions eported by the package in the embedded app. A simple fix for a simple mistake 🔧.</p>
+<p>Although I fixed this error, I still couldnt get the plots within the app to appear. With limited time and resources I decided that this is a fix for a another day.</p>
+</div>
+<div id="what-i-loved-about-the-app-️" class="section level2">
+<h2>What I loved about the app ❤️</h2>
+<p>The app provided all the information expected of it, such as a comparison of the trend of COVID-19 cases and deaths due to COVID-19 in the selected countries, as well as a comparison of death rates per confirmed cases.</p>
+<p>But what I loved most about the app is :</p>
+<p><strong>The structure of the app</strong><br />
+The app was structured in a very user-friendly format with each menu item having a user guide explaining the visualization and instructions to use.</p>
+<p><strong>The interactive elements in the app</strong><br />
+The user was allowed to select the countries to be included in the plots and also select the date ranges to filter the plot.</p>
+</div>
+<div id="what-can-be-improved" class="section level2">
+<h2>What can be improved ❓</h2>
+<p>The area that I feel needs most improvement is the documenation.
+It was such a shame that all the documentation and vignettes were included within the app but not exposed to the public.<br />
+Although this is a fantastic app, the lack of documentation stating what functions are available to use and examples of usage lets it down.</p>
+<p>Another area that could be improved is by using functions within the Shiny application embedded within the package to minimize repetitive code.</p>
+<p>The data reading and wrangling within the application could also be done external to the package and the cleaned data files included within the package to minimize the size of the package and processing and loading time.</p>
+<p>More test cases can also be included to test functionality, possible input arguments and edge cases for the exported functions.</p>
+</div>
+<div id="conclusion" class="section level2">
+<h2>Conclusion 🤝</h2>
+<p>The <code>covtrack</code> R-package is definitely and interesting package aimed at comparing COVID-19 cases across USA, Brazil, India and Australia, which can then be used to compare the similarities and differences in trends based on the different approaches followed by the countries to manage the spread.
+While there are still a few areas for improvement, the package is definitely a great idea in the making 👏</p>
+<p>Reviewing the package was also a great learning experience for me in terms of debugging an application, identifying and resolving errors as well as understanding a completely different coding-style to mine.</p>
+<p>Hope you enjoyed my review!</p>
+<p>In summary, the following checklist reviews a few key components of the package.</p>
+<div id="documentation" class="section level4">
+<h4>Documentation</h4>
+<p>The package includes all the following forms of documentation:</p>
+<ul>
+<li><input type="checkbox" disabled="" checked="" />
+<strong>Installation instructions:</strong> for the package is found in README<br />
+</li>
+<li><input type="checkbox" disabled="" checked="" />
+<strong>Vignette(s)</strong> demonstrating major functionality that runs successfully locally<br />
+</li>
+<li><input type="checkbox" disabled="" checked="" />
+<strong>Function Documentation:</strong> for all exported functions in R help<br />
+</li>
+<li><input type="checkbox" disabled="" />
+<strong>Examples</strong> for all exported functions in R Help that run successfully locally</li>
+</ul>
+</div>
+<div id="functionality" class="section level4">
+<h4>Functionality</h4>
+<ul>
+<li><input type="checkbox" disabled="" checked="" />
+<strong>Installation:</strong> Installation succeeds as documented.<br />
+</li>
+<li><input type="checkbox" disabled="" />
+<strong>Functionality:</strong> Any functional claims of the software been confirmed.<br />
+</li>
+<li><input type="checkbox" disabled="" checked="" />
+<strong>Automated tests:</strong> Unit tests cover essential functions of the package
+and a reasonable range of inputs and conditions. All tests pass on the local machine.</li>
+</ul>
+</div>
+</div>
